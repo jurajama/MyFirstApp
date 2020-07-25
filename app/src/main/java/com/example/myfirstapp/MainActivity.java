@@ -17,12 +17,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private static final String TAG = "MyActivity";
     private SensorManager sensorManager;
-    private Sensor pressureSensor = null;
-    private boolean bPressureSensorFound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,41 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         for(int i=0; i<deviceSensors.size(); i++)
         {
             Log.d(TAG, "Sensor info: " + deviceSensors.get(i).getName());
-            if(deviceSensors.get(i).getType() == Sensor.TYPE_PRESSURE)
-                pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        // Register a listener for the sensor.
-        super.onResume();
-        if(pressureSensor!=null)
-            sensorManager.registerListener(this, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    @Override
-    protected void onPause() {
-        // Be sure to unregister the sensor when the activity pauses.
-        super.onPause();
-        if(pressureSensor!=null)
-            sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    public final void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // This function needs to be overriden even if we are not interested on accuracy change events
-        // because the activity class shall implement all methods of SensorEventListener interface
-    }
-
-    @Override
-    public final void onSensorChanged(SensorEvent event) {
-        float millibarsOfPressure = event.values[0];
-        Log.d(TAG, "onSensorChanged, pressure value: " + millibarsOfPressure);
-
-        TextView textView = findViewById(R.id.pressureDisplay);
-        String sPressure = Float.valueOf(millibarsOfPressure).toString() + " mbar";
-        textView.setText(sPressure);
     }
 
     /** Called when the user taps the Send button */
@@ -87,6 +51,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         EditText editText = (EditText) findViewById(R.id.editText);
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+
+    /** Called when the user taps the Pressure button */
+    public void switchToPressureView(View view) {
+        Intent intent = new Intent(this, PressureViewActivity.class);
         startActivity(intent);
     }
 }

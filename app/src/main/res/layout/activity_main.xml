@@ -33,14 +33,15 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/editText" />
 
-    <TextView
-        android:id="@+id/pressureDisplay"
-        android:layout_width="233dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="66dp"
-        android:text="pres not avail"
-        android:textSize="30sp"
+    <Button
+        android:id="@+id/pressureViewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="116dp"
+        android:onClick="switchToPressureView"
+        android:text="Pressure..."
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
