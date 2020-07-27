@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ApiTestResponse {
-    // POJO class to get the data from web api
-    // Corresponds to test API https://jsonplaceholder.typicode.com/todos/
-    // Using Retrofit 2.x GET example of https://abhiandroid.com/programming/retrofit as model
+    /*
+     POJO class to get the data from web api
+     Corresponds to test API https://jsonplaceholder.typicode.com/todos/
+     Using Retrofit 2.x GET example of https://abhiandroid.com/programming/retrofit as model
+    */
 
     @SerializedName("userId")
     private int userId;

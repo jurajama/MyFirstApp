@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -48,13 +49,21 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.d(TAG, "Sensor info: " + deviceSensors.get(i).getName());
         }
+    }
 
-        // REST API testing
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // REST API testing, fetching time every time main view becomes visible
         getApiData();
 
-        // NOTE: Internet access permission is "normal permission" that does not need explicit acceptance by user
-        // However for example using camera would need that as that is "dangerous permission"
-        // https://www.geeksforgeeks.org/android-how-to-request-permissions-in-android-application/
+        /*
+         NOTE: Internet access permission defined in this case in AndroidManifest.xml
+         is "normal permission" that does not need explicit acceptance by user.
+         However for example using camera would need that as that is "dangerous permission"
+         https://www.geeksforgeeks.org/android-how-to-request-permissions-in-android-application/
+        */
     }
 
     private void getApiData() {
@@ -64,20 +73,30 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("responseGET", String.valueOf(response.body().size()));
                 apiResponseData = response.body();
 
-                for(int i=0; i<response.body().size(); i++)
+                Toast.makeText(MainActivity.this,
+                        "REST API fetch successful, number of items: " + String.valueOf(apiResponseData.size()),
+                        Toast.LENGTH_SHORT)
+                        .show();
+
+                for(int i=0; i<apiResponseData.size(); i++)
                 {
                     ApiTestResponse item = response.body().get(i);
                     Log.d("responseGET", String.valueOf(item.getId()) + ":" + item.getTitle());
                 }
+
                 // Process data here, for example set UI elements
             }
 
             @Override
             public void onFailure(Call<List<ApiTestResponse>> call, Throwable t) {
                 // if error occurs in network transaction then we can get the error in this method.
-                Log.e("responseGET", "ERROR in REST API call");
-                Log.e("responseGET", "I got an error", t);
-                // TODO: Toast for error message
+
+                Log.e("responseGET", "REST API error:\n" + t);
+
+                Toast.makeText(MainActivity.this,
+                        "Failed to fetch data from REST API",
+                        Toast.LENGTH_SHORT)
+                        .show();
             }
         });
     }
