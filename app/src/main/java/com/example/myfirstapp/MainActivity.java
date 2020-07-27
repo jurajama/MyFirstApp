@@ -14,10 +14,18 @@ import android.widget.EditText;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+// Retrofit example is from Retrofit 2.X GET chapter in https://abhiandroid.com/programming/retrofit
+
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private static final String TAG = "MyActivity";
     private SensorManager sensorManager;
+
+    List<ApiTestResponse> apiResponseData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +48,40 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.d(TAG, "Sensor info: " + deviceSensors.get(i).getName());
         }
+
+        // REST API testing
+        getApiData();
+
+        // NOTE: Internet access permission is "normal permission" that does not need explicit acceptance by user
+        // However for example using camera would need that as that is "dangerous permission"
+        // https://www.geeksforgeeks.org/android-how-to-request-permissions-in-android-application/
     }
+
+    private void getApiData() {
+        (Api.getClient().getTodoList()).enqueue(new Callback<List<ApiTestResponse>>() {
+            @Override
+            public void onResponse(Call<List<ApiTestResponse>> call, Response<List<ApiTestResponse>> response) {
+                Log.d("responseGET", String.valueOf(response.body().size()));
+                apiResponseData = response.body();
+
+                for(int i=0; i<response.body().size(); i++)
+                {
+                    ApiTestResponse item = response.body().get(i);
+                    Log.d("responseGET", String.valueOf(item.getId()) + ":" + item.getTitle());
+                }
+                // Process data here, for example set UI elements
+            }
+
+            @Override
+            public void onFailure(Call<List<ApiTestResponse>> call, Throwable t) {
+                // if error occurs in network transaction then we can get the error in this method.
+                Log.e("responseGET", "ERROR in REST API call");
+                Log.e("responseGET", "I got an error", t);
+                // TODO: Toast for error message
+            }
+        });
+    }
+
 
     /** Called when the user taps the Send button */
     public void sendMessage(View view) {
