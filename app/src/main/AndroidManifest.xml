@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myfirstapp">
-
     <!-- This permission is needed when using external APIs -->
     <!-- If you add new permissions, you need to uninstall the app before running again -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".LocationActivity"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
             android:name=".PressureViewActivity"
             android:parentActivityName=".MainActivity">
+
             <!-- parentActivityName attribute adds Up-arrow in activity that user can use to return to main activity -->
         </activity>
         <activity

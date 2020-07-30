@@ -1,10 +1,14 @@
 package com.example.myfirstapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -12,6 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+// This is for nonnull annotation
+import androidx.annotation.NonNull;
 
 import java.util.List;
 
@@ -27,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private SensorManager sensorManager;
 
     List<ApiTestResponse> apiResponseData;
+
+    private static int FINE_LOCATION_REQUEST_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,4 +125,83 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PressureViewActivity.class);
         startActivity(intent);
     }
+
+    /** Called when the user taps the Location button */
+    public void switchToLocationView(View view) {
+        // Second parameter is just application specific constant to identify this request in callback
+        checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, FINE_LOCATION_REQUEST_CODE);
+
+        // Activity is not started here because it would block the visibility of permissions dialogue
+        // Instead the activity is started in checkPermission or access granted callback
+    }
+
+    // Function to check and request permission
+    public void checkPermission(String permission, int requestCode)
+    {
+        // Checking if permission is not granted
+        if (ContextCompat.checkSelfPermission(
+                MainActivity.this,
+                permission)
+                == PackageManager.PERMISSION_DENIED) {
+            Log.d(TAG,"requesting permission");
+            ActivityCompat
+                    .requestPermissions(
+                            MainActivity.this,
+                            new String[] { permission },
+                            requestCode);
+        }
+        else {
+            Toast
+                    .makeText(MainActivity.this,
+                            "Permission already granted",
+                            Toast.LENGTH_SHORT)
+                    .show();
+
+            if(requestCode==FINE_LOCATION_REQUEST_CODE) {
+                Intent intent = new Intent(this, LocationActivity.class);
+                startActivity(intent);
+            }
+        }
+    }
+
+    // This function is called when user accept or decline the permission.
+// Request Code is used to check which permission called this function.
+// This request code is provided when user is prompt for permission.
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        super
+                .onRequestPermissionsResult(requestCode,
+                        permissions,
+                        grantResults);
+
+        if (requestCode == FINE_LOCATION_REQUEST_CODE) {
+
+            // Checking whether user granted the permission or not.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // Showing the toast message
+                Toast.makeText(MainActivity.this,
+                        "Fine Location Permission Granted",
+                        Toast.LENGTH_SHORT)
+                        .show();
+
+                if(requestCode==FINE_LOCATION_REQUEST_CODE) {
+                    Intent intent = new Intent(this, LocationActivity.class);
+                    startActivity(intent);
+                }
+            }
+            else {
+                Toast.makeText(MainActivity.this,
+                        "Fine Location Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
 }
