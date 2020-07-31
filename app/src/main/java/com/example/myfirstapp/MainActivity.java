@@ -30,7 +30,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
-    private static final String TAG = "MyActivity";
+    private static final String TAG = "MainActivity";
     private SensorManager sensorManager;
 
     List<ApiTestResponse> apiResponseData;
@@ -82,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("responseGET", String.valueOf(response.body().size()));
                 apiResponseData = response.body();
 
-                Toast.makeText(MainActivity.this,
-                        "REST API fetch successful, number of items: " + String.valueOf(apiResponseData.size()),
-                        Toast.LENGTH_SHORT)
-                        .show();
+                //Toast.makeText(MainActivity.this,
+                //        "REST API fetch successful, number of items: " + String.valueOf(apiResponseData.size()),
+                //        Toast.LENGTH_SHORT)
+                //        .show();
 
                 for(int i=0; i<apiResponseData.size(); i++)
                 {
@@ -151,11 +151,7 @@ public class MainActivity extends AppCompatActivity {
                             requestCode);
         }
         else {
-            Toast
-                    .makeText(MainActivity.this,
-                            "Permission already granted",
-                            Toast.LENGTH_SHORT)
-                    .show();
+            Log.d(TAG,"Permission already granted");
 
             if(requestCode==FINE_LOCATION_REQUEST_CODE) {
                 Intent intent = new Intent(this, LocationActivity.class);

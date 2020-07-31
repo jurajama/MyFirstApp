@@ -10,7 +10,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 public class DisplayMessageActivity extends AppCompatActivity {
-    private static final String TAG = "MyActivity";
+    private static final String TAG = "DisplayMessageActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
